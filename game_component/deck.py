@@ -1,14 +1,20 @@
+# coding: UTF-8
 import random
 import math
+
+# TODO カードはカードオブジェクトで管理したい
 card_list = [
-            1,2,3,4,5,6,7,8,9,10
+            '♠|1','♠|2','♠|3','♠|4','♠|5','♠|6','♠|7','♠|8','♠|9','♠|10','♠|11','♠|12','♠|13',
+            '♣|1','♣|2','♣|3','♣|4','♣|5','♣|6','♣|7','♣|8','♣|9','♣|10','♣|11','♣|12','♣|13',
+            '◆|1','◆|2','◆|3','◆|4','◆|5','◆|6','◆|7','◆|8','◆|9','◆|10','◆|11','◆|12','◆|13',
+            '♥|1','♥|2','♥|3','♥|4','♥|5','♥|6','♥|7','♥|8','♥|9','♥|10','♥|11','♥|12','♥|13',
             # 1,2,3,4,5,6,7,8,9,10,
             # 1,2,3,4,5,6,7,8,9,10,
             # 1,2,3,4,5,6,7,8,9,10,
 ]
 
 
-def fisher_yates_shuffle(source: list) -> list:
+def fisher_yates_shuffle(source):
     """
     要素数が n の配列 a を、
     配列 source をランダムにシャッフルしたコピーで初期化する
@@ -52,6 +58,7 @@ class Deck(object):
         デッキに含まれるカード群
     """
     def __init__(self):
+        print(type(card_list))
         self.cards = fisher_yates_shuffle(card_list)
 
     def draw(self):
@@ -63,7 +70,8 @@ class Deck(object):
         int
             カード
         """
-        return self.cards.pop()
+        card = self.cards.pop()
+        return card
 
     def open(self):
         """

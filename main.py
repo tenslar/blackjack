@@ -1,45 +1,56 @@
+# coding: UTF-8
 
-from user_interface.inputinterface import InputInterface
-from game_component import board, deck
-from player.player import PlayerActionSignal
+from user_interface import InputInterface
+from game_component import Deck, Player, Dealer, PlayerActionSignal
 
 
 if __name__ == '__main__':
-
+    # オブジェクト初期化
     input_interface = InputInterface()
-    board = board.Board()
-    deck = deck.Deck()
+    deck = Deck()
+    player = Player()
+    dealer = Dealer()
 
     # プレイヤーにカードを配る
-    board.player_cards.append(deck.draw())
-    board.player_cards.append(deck.draw())
-    print("Your cards are {}".format(board.player_cards))
+    player.add(deck.draw())
+    player.add(deck.draw())
+    print("Your cards are {}".format(player.show()))
 
     # ディーラーにカードを配る
-    board.dealer_cards.append(deck.draw())
-    board.dealer_cards.append(deck.draw())
-    print("Dealer cards are [{}, *]".format(next(iter(board.dealer_cards), None)))
+    dealer.add(deck.draw())
+    dealer.add(deck.draw())
+    print("Dealer cards are {}".format(dealer.first_show()))
 
-    print(deck.open())
+    while 1:
 
-    action = input_interface.receive_action()
+        # ユーザーアクション受付
+        action = input_interface.receive_action()
 
-    print(action)
+        print(action)
 
-    if action == PlayerActionSignal.STAND:
-        player_card_count = 0
-        for card in board.player_cards:
-            player_card_count += card
-        dealer_card_count = 0
-        for card in board.dealer_cards:
-            dealer_card_count += card
+        # 今は「スタンド」のみ対応
+        # TODO 次はできれば処理を別ファイルに分けたい&「ヒット」の実装
+        if action == PlayerActionSignal.STAND:
+            while dealer.point() >= 17 :
+                if dealer.point() < 17:
+                    dealer.add(deck.draw())
+                if dealer.point() > 21:
+                    print("You are win!!!")
+                    exit()
 
-        print("Your cards are {}. Total:{}".format(board.player_cards, player_card_count))
-        print("Dealer cards are {}. Total:{}".format(board.dealer_cards, dealer_card_count))
-        # 勝利判定
-        if dealer_card_count < player_card_count <= 21:
-            print("You are win!!!")
-        else:
-            print("You are lose...")
+            print("Your cards are {}. Total:{}".format(player.show(), player.point()))
+            print("Dealer cards are {}. Total:{}".format(dealer.show(), dealer.point()))
+            # 勝利判定
+            if dealer.point() < player.point() <= 21:
+                print("You are win!!!")
+            else:
+                print("You are lose...")
+            exit()
+        if action == PlayerActionSignal.HIT:
+            player.add(deck.draw())
+            print("Your cards are {}. Total:{}".format(player.show(), player.point()))
+            if player.point() > 21:
+                print("You are lose...")
+                exit()
 
 

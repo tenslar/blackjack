@@ -1,6 +1,10 @@
-from player.player import PlayerActionSignal
+# coding: UTF-8
+from game_component import PlayerActionSignal
 
 class InputInterface(object):
+    """
+    ユーザーの入力を管理するインターフェース
+    """
     actions = {
         '1' : PlayerActionSignal.HIT,
         '2' : PlayerActionSignal.STAND
